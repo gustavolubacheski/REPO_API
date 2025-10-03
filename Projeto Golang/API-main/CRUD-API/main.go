@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gustavolubacheski/API/CRUD-API/routes"
@@ -12,5 +13,5 @@ func main() {
 
 	r := routes.NewRouter()
 
-	http.ListenAndServe(":8080", r)
+	log.Fatal(http.ListenAndServe(":8080", r)) // Single blocking call with your router
 }

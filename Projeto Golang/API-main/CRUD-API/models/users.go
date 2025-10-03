@@ -1,6 +1,11 @@
 package models
 
-import "time"
+import (
+	"fmt"
+	"time"
+
+	"github.com/gustavolubacheski/API/CRUD-API/utils"
+)
 
 type User struct {
 	Id            int    `json:"id"`
@@ -21,6 +26,10 @@ type ContaBancaria struct {
 func NewUser(u User) (bool, error) {
 	con := Connect()
 	defer con.Close()
+
+	if !utils.AllValidationsPass(u.CPF_CNPJ, u.Email, u.ContaBancaria.Agencia, u.ContaBancaria.Conta, u.ContaBancaria.Banco, u.ContaBancaria.Pix) {
+		return false, fmt.Errorf("validation failed")
+	}
 
 	u.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
 
@@ -90,6 +99,10 @@ func UpdateUser(user User) (int64, error) {
 	con := Connect()
 	defer con.Close()
 	sqlStatement := "UPDATE users SET nome = ?, email = ?, agencia = ?, conta = ?, banco = ?, pix = ? WHERE cpf_cnpj = ?"
+
+	if !utils.AllValidationsPass(user.CPF_CNPJ, user.Email, user.ContaBancaria.Agencia, user.ContaBancaria.Conta, user.ContaBancaria.Banco, user.ContaBancaria.Pix) {
+		return 0, fmt.Errorf("validation failed")
+	}
 
 	stmt, err := con.Prepare(sqlStatement)
 	if err != nil {
