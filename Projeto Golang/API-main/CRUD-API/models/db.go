@@ -10,9 +10,9 @@ import (
 
 const (
 	DRIVER   = "mysql"
-	DBNAME   = "crudgo"
+	DBNAME   = "apicrud"
 	USER     = "root"
-	PASSWORD = "123"
+	PASSWORD = "root"
 )
 
 func Connect() *sql.DB {

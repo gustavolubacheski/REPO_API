@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD de Usuários</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+ 
+<body>
+    <div class="container">
+        <div class="column">
+            <h2>Criar / Atualizar Usuário</h2>
+            <form id="user-form">
+                <input type="text" id="nome" placeholder="Nome" required>
+                <input type="text" id="cpf_cnpj" placeholder="CPF/CNPJ" required>
+                <input type="email" id="email" placeholder="E-mail" required>
+                <input type="text" id="agencia" placeholder="Agência">
+                <input type="text" id="conta" placeholder="Conta">
+                <input type="text" id="banco" placeholder="Banco">
+                <input type="text" id="pix" placeholder="Chave PIX">
+                <button type="submit" id="submit-btn">Criar Usuário</button>
+                <button type="button" id="clear-btn">Limpar</button>
+            </form>
+            <div id="result-display">Aguardando ação...</div>
+
+            <div class="search-section">
+                <h2 class="section-title">Buscar / Deletar por CPF</h2>
+                <input type="text" id="search-cpf-input" placeholder="Digite o CPF">
+                <button id="search-btn">Buscar</button>
+                <button id="delete-btn">Deletar</button>
+            </div>
+        </div>
+
+        <div class="column">
+            <h2>Todos os Usuários</h2>
+            <button id="load-all-btn">Carregar Todos</button>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>CPF/CNPJ</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody id="users-table-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+ 
+</html>

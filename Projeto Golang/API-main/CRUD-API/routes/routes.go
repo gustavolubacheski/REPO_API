@@ -30,12 +30,13 @@ func usersGetHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(struct {
-			Error  string
-			Status int `json:"status"`
+			Error  string `json:"error"`
+			Status int    `json:"status"`
 		}{
 			Error:  "INTERNAL SERVER ERROR",
 			Status: 500,
 		})
+		return
 	}
 	json.NewEncoder(w).Encode(users)
 }
@@ -46,8 +47,8 @@ func usersPostHandler(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(struct {
-			Error  string
-			Status int `json:"status"`
+			Error  string `json:"error"`
+			Status int    `json:"status"`
 		}{
 			Error:  "INVALID JSON",
 			Status: 400,
@@ -57,10 +58,10 @@ func usersPostHandler(w http.ResponseWriter, r *http.Request) {
 	_, err := models.NewUser(user)
 	if err != nil {
 		fmt.Println("Database Error:", err)
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusUnprocessableEntity)
 		json.NewEncoder(w).Encode(struct {
-			Error  string
-			Status int `json:"status"`
+			Error  string `json:"error"`
+			Status int    `json:"status"`
 		}{
 			Error:  "UNPROCESSABLE ENTITY",
 			Status: 422,
@@ -68,9 +69,10 @@ func usersPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(struct {
-		Message string
-		Status  int `json:"status"`
+		Message string `json:"message"`
+		Status  int    `json:"status"`
 	}{
 		Message: "User created successfully",
 		Status:  201,
@@ -85,8 +87,8 @@ func usersGetByCPFHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(struct {
-			Error  string
-			Status int
+			Error  string `json:"error"`
+			Status int    `json:"status"`
 		}{
 			Error:  "User not found",
 			Status: http.StatusNotFound,
@@ -94,7 +96,6 @@ func usersGetByCPFHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	json.NewEncoder(w).Encode(user)
-
 }
 
 func usersDeleteByCPFHandler(w http.ResponseWriter, r *http.Request) {
@@ -105,8 +106,8 @@ func usersDeleteByCPFHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(struct {
-			Error  string
-			Status int
+			Error  string `json:"error"`
+			Status int    `json:"status"`
 		}{
 			Error:  "Error deleting user",
 			Status: http.StatusInternalServerError,
@@ -117,15 +118,15 @@ func usersDeleteByCPFHandler(w http.ResponseWriter, r *http.Request) {
 	if rowsAffected == 0 {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(struct {
-			Error  string
-			Status int
+			Error  string `json:"error"`
+			Status int    `json:"status"`
 		}{Error: "User not found", Status: http.StatusNotFound})
 		return
 	}
 
 	json.NewEncoder(w).Encode(struct {
-		Message string
-		Status  int
+		Message string `json:"message"`
+		Status  int    `json:"status"`
 	}{
 		Message: "User deleted successfully",
 		Status:  200,
@@ -141,8 +142,8 @@ func usersUpdateByCPFHandler(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(struct {
-			Error  string
-			Status int
+			Error  string `json:"error"`
+			Status int    `json:"status"`
 		}{Error: "INVALID JSON", Status: http.StatusBadRequest})
 		return
 	}
@@ -154,8 +155,8 @@ func usersUpdateByCPFHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Database Error:", err)
 		w.WriteHeader(http.StatusUnprocessableEntity)
 		json.NewEncoder(w).Encode(struct {
-			Error  string
-			Status int
+			Error  string `json:"error"`
+			Status int    `json:"status"`
 		}{
 			Error:  "UNPROCESSABLE ENTITY",
 			Status: 422,
@@ -166,15 +167,15 @@ func usersUpdateByCPFHandler(w http.ResponseWriter, r *http.Request) {
 	if rowsAffected == 0 {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(struct {
-			Error  string
-			Status int
+			Error  string `json:"error"`
+			Status int    `json:"status"`
 		}{Error: "User not found to update", Status: http.StatusNotFound})
 		return
 	}
 
 	json.NewEncoder(w).Encode(struct {
-		Message string
-		Status  int `json:"status"`
+		Message string `json:"message"`
+		Status  int    `json:"status"`
 	}{
 		Message: "User updated successfully",
 		Status:  http.StatusOK,
